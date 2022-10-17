@@ -14,18 +14,24 @@ namespace DSPAlgorithms.Algorithms
 
         public override void Run()
         {
-            List<float> values = new List<float>(InputSignals.Last().Samples.Count);
+            // get max number of elements
+            int max = 0;
+            for (int i = 0; i < InputSignals.Count; i++)
+            {
+                if (InputSignals[i].Samples.Count > max)
+                    max = InputSignals[i].Samples.Count;
+            }
+
+            float[] values = new float[max];
             for (int i = 0; i < InputSignals.Count; i++)
             {
                 for (int j = 0; j < InputSignals[i].Samples.Count; j++)
                 {
-                    if (values.Count - 1 < j)
-                        values.Add(0);
                     values[j] += InputSignals[i].Samples[j];
                 }
             }
 
-            OutputSignal = new Signal(values, false);
+            OutputSignal = new Signal(values.ToList(), false);
         }
     }
 }
