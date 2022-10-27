@@ -18,9 +18,9 @@ namespace DSPComponentsUnitTest
             var sig2 = UnitTestUtitlities.LoadSignal("TestingSignals/Signal2.ds");
 
 
-           var expectedOutput = UnitTestUtitlities.LoadSignal("TestingSignals/Adder_TestCase1.ds");
+            var expectedOutput = UnitTestUtitlities.LoadSignal("TestingSignals/Adder_TestCase1.ds");
 
-            Adder a = new Adder();            
+            Adder a = new Adder();
             a.InputSignals = new List<Signal>();
             a.InputSignals.Add(sig1);
             a.InputSignals.Add(sig2);
@@ -34,11 +34,11 @@ namespace DSPComponentsUnitTest
         [TestMethod]
         public void AdderTestMethod2()
         {
-           
+
             var sig1 = UnitTestUtitlities.LoadSignal("TestingSignals/Signal1.ds");
             var sig2 = UnitTestUtitlities.LoadSignal("TestingSignals/Signal3.ds");
 
-            var expectedOutput = UnitTestUtitlities.LoadSignal("TestingSignals/Adder_TestCase2.ds"); 
+            var expectedOutput = UnitTestUtitlities.LoadSignal("TestingSignals/Adder_TestCase2.ds");
 
             Adder a = new Adder();
             a.InputSignals = new List<Signal>();
@@ -46,10 +46,10 @@ namespace DSPComponentsUnitTest
             a.InputSignals.Add(sig2);
 
             a.Run();
-            
+
             Assert.IsTrue(UnitTestUtitlities.SignalsSamplesAreEqual(expectedOutput.Samples, a.OutputSignal.Samples));
         }
 
-         
+
     }
 }
