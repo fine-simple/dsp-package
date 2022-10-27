@@ -8,7 +8,7 @@ using DSPAlgorithms.DataStructures;
 
 namespace DSPAlgorithms.Algorithms
 {
-    public class SinCos: Algorithm
+    public class SinCos : Algorithm
     {
         public string type { get; set; }
         public float A { get; set; }
@@ -18,8 +18,21 @@ namespace DSPAlgorithms.Algorithms
         public List<float> samples { get; set; }
         public override void Run()
         {
-            
-            throw new NotImplementedException();
+            samples = new List<float>();
+            if (SamplingFrequency >= 2 * AnalogFrequency)
+            {
+                var _2_pi_f = 2 * Math.PI * (AnalogFrequency / SamplingFrequency);
+                if (type == "sin")
+                {
+                    for (int i = 0; i < SamplingFrequency; i++)
+                        samples.Add((float)(A * Math.Sin((_2_pi_f * i) + PhaseShift)));
+                }
+                else if (type == "cos")
+                {
+                    for (int i = 0; i < SamplingFrequency; i++)
+                        samples.Add((float)(A * Math.Cos((_2_pi_f * i) + PhaseShift)));
+                }
+            }
         }
     }
 }
