@@ -18,14 +18,18 @@ namespace DSPAlgorithms.Algorithms
         public List<int> OutputIntervalIndices { get; set; }
         public List<string> OutputEncodedSignal { get; set; }
         public List<float> OutputSamplesError { get; set; }
-
-        public override void Run()
+        
+        private void init()
         {
-            // init
             OutputEncodedSignal = new List<string>();
             OutputIntervalIndices = new List<int>();
             OutputQuantizedSignal = new Signal(new List<float>(), false);
             OutputSamplesError = new List<float>();
+        }
+
+        public override void Run()
+        {
+            init();
 
             // assign missing of inputLevels or bits
             if(InputLevel > 0)
@@ -47,38 +51,28 @@ namespace DSPAlgorithms.Algorithms
                 intervals[i] = minAmp + delta * i;
             }
             
-            // assign interval index
             for (int i = 0; i < samples.Count; i++)
             {
-                OutputIntervalIndices.Add(getIndex(samples[i], intervals) + 1);
-            }
+                // get interval index
+                int intervalIdx = getIntervalIndex(samples[i], intervals);
+                OutputIntervalIndices.Add(intervalIdx + 1);
 
-            // encoded values
-            for (int i = 0; i < samples.Count; i++)
-            {
-                int intervalIdx = OutputIntervalIndices[i] - 1;
+                // encoded values
                 string binary = Convert.ToString(intervalIdx, 2);
                 while(binary.Length < InputNumBits)
                     binary = "0" + binary;
                 OutputEncodedSignal.Add(binary);
-            }
 
-            // assign new signal values
-            for (int i = 0; i < samples.Count; i++)
-            {
-                int intervalIdx = OutputIntervalIndices[i] - 1;
+                // assign new signal values
                 float mean = (intervals[intervalIdx] + intervals[intervalIdx + 1]) / 2;
                 OutputQuantizedSignal.Samples.Add(mean);
-            }
-            
-            // calculate error per sample
-            for (int i = 0; i < samples.Count; i++)
-            {
+
+                // assign error per sample
                 OutputSamplesError.Add(OutputQuantizedSignal.Samples[i] - samples[i]);
             }
         }
 
-        private int getIndex(float sample, float[] intervals)
+        private int getIntervalIndex(float sample, float[] intervals)
         {
             int start = 0, end = intervals.Length - 1;
             int mid = (start + end) / 2;
