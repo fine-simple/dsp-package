@@ -50,7 +50,7 @@ namespace DSPAlgorithms.Algorithms
             // assign interval index
             for (int i = 0; i < samples.Count; i++)
             {
-                OutputIntervalIndices.Add(getIndex(samples[i], intervals));
+                OutputIntervalIndices.Add(getIndex(samples[i], intervals) + 1);
             }
 
             // encoded values
@@ -80,15 +80,25 @@ namespace DSPAlgorithms.Algorithms
 
         private int getIndex(float sample, float[] intervals)
         {
-            // TODO: Binary search on the intervals
-            int index;
-            
-            for (index = 0; index < intervals.Length - 2; index++)
+            int start = 0, end = intervals.Length - 1;
+            int mid = (start + end) / 2;
+
+            while(start < end)
             {
-                if(sample >= intervals[index] && sample <= intervals[index+1])
-                    break;
+                mid = (start + end) / 2;
+                if(sample > intervals[mid])
+                {
+                    if(sample <= intervals[mid+1])
+                        return mid;
+                    else
+                        start = mid + 1;
+                }
+                else
+                {
+                    end = mid;
+                }
             }
-            return index + 1;
+            return mid;
         }
     }
 }
