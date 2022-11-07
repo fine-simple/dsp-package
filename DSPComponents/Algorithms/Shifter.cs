@@ -9,6 +9,7 @@ namespace DSPAlgorithms.Algorithms
 {
     public class Shifter : Algorithm
     {
+        // TODO: Task 3
         public Signal InputSignal { get; set; }
         public int ShiftingValue { get; set; }
         public Signal OutputShiftedSignal { get; set; }

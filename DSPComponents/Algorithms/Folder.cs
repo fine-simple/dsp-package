@@ -9,6 +9,7 @@ namespace DSPAlgorithms.Algorithms
 {
     public class Folder : Algorithm
     {
+        // TODO: Task 3
         public Signal InputSignal { get; set; }
         public Signal OutputFoldedSignal { get; set; }
 

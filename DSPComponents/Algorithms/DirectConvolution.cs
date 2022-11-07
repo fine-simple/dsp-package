@@ -9,6 +9,7 @@ namespace DSPAlgorithms.Algorithms
 {
     public class DirectConvolution : Algorithm
     {
+        // TODO: Task 3
         public Signal InputSignal1 { get; set; }
         public Signal InputSignal2 { get; set; }
         public Signal OutputConvolvedSignal { get; set; }

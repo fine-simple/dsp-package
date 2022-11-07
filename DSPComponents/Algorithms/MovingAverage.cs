@@ -9,6 +9,7 @@ namespace DSPAlgorithms.Algorithms
 {
     public class MovingAverage : Algorithm
     {
+        // TODO: Task 3
         public Signal InputSignal { get; set; }
         public int InputWindowSize { get; set; }
         public Signal OutputAverageSignal { get; set; }
