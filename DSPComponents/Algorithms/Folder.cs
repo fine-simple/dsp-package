@@ -19,9 +19,7 @@ namespace DSPAlgorithms.Algorithms
             OutputFoldedSignal = new Signal(InputSignal.Samples.ToList(), InputSignal.SamplesIndices.ToList(), !InputSignal.Periodic);
             
             for (int i = 0; i < OutputFoldedSignal.SamplesIndices.Count; i++)
-            {
                 OutputFoldedSignal.SamplesIndices[i] *= -1; 
-            }
             
             OutputFoldedSignal.Samples.Reverse();
             OutputFoldedSignal.SamplesIndices.Reverse();
