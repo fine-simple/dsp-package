@@ -10,23 +10,21 @@ namespace DSPAlgorithms.Algorithms
 {
     public class Folder : Algorithm
     {
-        // TODO: Task 3
+        // TODO: Task 3 [Completed]
         public Signal InputSignal { get; set; }
         public Signal OutputFoldedSignal { get; set; }
 
         public override void Run()
         {
+            OutputFoldedSignal = new Signal(InputSignal.Samples.ToList(), InputSignal.SamplesIndices.ToList(), !InputSignal.Periodic);
             
-            var samples = AlgorithmsUtilities.getSampleDict(InputSignal.SamplesIndices, InputSignal.Samples);
-            var newSamples = new SortedDictionary<int, float>();
-
-            foreach (var key in samples.Keys)
+            for (int i = 0; i < OutputFoldedSignal.SamplesIndices.Count; i++)
             {
-                newSamples.Add(-key, samples[key]);
+                OutputFoldedSignal.SamplesIndices[i] *= -1; 
             }
-
-            OutputFoldedSignal = new Signal(newSamples.Values.ToList(), false);            
-            OutputFoldedSignal.SamplesIndices = newSamples.Keys.ToList();
+            
+            OutputFoldedSignal.Samples.Reverse();
+            OutputFoldedSignal.SamplesIndices.Reverse();
         }
     }
 }
