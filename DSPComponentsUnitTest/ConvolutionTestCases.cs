@@ -63,11 +63,14 @@ namespace DSPComponentsUnitTest
         {
             DirectConvolution dc = new DirectConvolution();
             // test case 4 ..
-            var expectedOutput = new Signal(new List<float>() { 1, 1, -1, 0, 0, 3, 3, 2, 1 }, new List<int>() { -2, -1, 0, 1, 2, 3, 4, 5, 6 }, false);
+            var expectedOutput = new Signal(new List<float>() { 1, 1, -1, 0, 0, 3, 3, 2, 1 },
+                new List<int>() { -2, -1, 0, 1, 2, 3, 4, 5, 6 }, false);
 
-            dc.InputSignal1 = new Signal(new List<float>() { 1, 2, 1, 1 }, new List<int>() { -2, -1, 0, 1 }, false);
+            dc.InputSignal1 = new Signal(new List<float>() { 1, 2, 1, 1 },
+                new List<int>() { -2, -1, 0, 1 }, false);
 
-            dc.InputSignal2 = new Signal(new List<float>() { 1, -1, 0, 0, 1, 1 }, new List<int>() { 0, 1, 2, 3, 4, 5 }, false);
+            dc.InputSignal2 = new Signal(new List<float>() { 1, -1, 0, 0, 1, 1 },
+                new List<int>() { 0, 1, 2, 3, 4, 5 }, false);
 
             dc.Run();
 
@@ -80,10 +83,13 @@ namespace DSPComponentsUnitTest
         {
             DirectConvolution dc = new DirectConvolution();
             // test case 4 ..
-            var expectedOutput = new Signal(new List<float>() {-3, 2, 2, 3, 2 }, new List<int>() { -3, -2, -1, 0, 1  }, false);
+            var expectedOutput = new Signal(new List<float>() { -3, 2, 2, 3, 2 },
+                new List<int>() { -3, -2, -1, 0, 1 }, false);
 
-            dc.InputSignal1 = new Signal(new List<float>() { 3, 1, 2, 0 }, new List<int>() { -2, -1, 0, 1 }, false);
-            dc.InputSignal2 = new Signal(new List<float>() { -1, 1, 1 }, new List<int>() { -1, 0, 1 }, false);
+            dc.InputSignal1 = new Signal(new List<float>() { 3, 1, 2, 0 },
+                new List<int>() { -2, -1, 0, 1 }, false);
+            dc.InputSignal2 = new Signal(new List<float>() { -1, 1, 1 },
+                new List<int>() { -1, 0, 1 }, false);
 
             dc.Run();
 
@@ -98,7 +104,7 @@ namespace DSPComponentsUnitTest
 
             var expectedOutput = new Signal(new List<float>() { 0.5f, 1, 1, 1, 1.5f, 2, 1.5f, 0.5f }, false);
 
-            fc.InputSignal1 = new Signal(new List<float>() { 1, 0, 0, 1, 1}, false);
+            fc.InputSignal1 = new Signal(new List<float>() { 1, 0, 0, 1, 1 }, false);
             fc.InputSignal2 = new Signal(new List<float>() { 0.5f, 1, 1, 0.5f }, false);
 
             fc.Run();

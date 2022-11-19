@@ -25,7 +25,7 @@ namespace DSPComponentsUnitTest
                 SigSamples.Add(sample);
                 SigIndices.Add(c++);
             }
-         
+
             sr.Close();
 
             streamSaver.WriteLine(0);
@@ -114,7 +114,7 @@ namespace DSPComponentsUnitTest
         {
             if (l1.Samples.Count != l2.Samples.Count)
                 return false;
-            
+
             if (l1.SamplesIndices.Count != l2.SamplesIndices.Count)
                 return false;
 
@@ -154,10 +154,10 @@ namespace DSPComponentsUnitTest
         {
             while (p < 0)
             {
-                p += 2*Math.PI;
+                p += 2 * Math.PI;
             }
 
-            return (float) (p % (2* Math.PI));
+            return (float)(p % (2 * Math.PI));
         }
         public static List<float> LoadSamples(string filePath)
         {
@@ -174,7 +174,7 @@ namespace DSPComponentsUnitTest
             }
 
             stream.Close();
-            return  SigSamples;
+            return SigSamples;
         }
 
         public static void SaveSignalTimeDomain(Signal sig, string filePath)
