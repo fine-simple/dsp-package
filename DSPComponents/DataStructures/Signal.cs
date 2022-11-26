@@ -14,6 +14,7 @@ namespace DSPAlgorithms.DataStructures
         public List<float> FrequenciesAmplitudes { get; set; }
         public List<float> FrequenciesPhaseShifts { get; set; }
         public bool Periodic { get; set; }
+        public bool folded { get; set; } = false;
 
         public Signal(List<float> _SignalSamples, bool _periodic)
         {

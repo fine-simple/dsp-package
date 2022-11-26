@@ -17,10 +17,11 @@ namespace DSPAlgorithms.Algorithms
         public override void Run()
         {
             OutputShiftedSignal = new Signal(InputSignal.Samples.ToList(), InputSignal.SamplesIndices.ToList(), InputSignal.Periodic);
+            OutputShiftedSignal.folded = InputSignal.folded;
             
             var samplesN = OutputShiftedSignal.SamplesIndices;
 
-            int sign = InputSignal.Periodic ? 1 : -1;
+            int sign = InputSignal.folded ? 1 : -1;
         
             for (int i = 0; i < samplesN.Count; i++)
                 samplesN[i] += sign * ShiftingValue;
