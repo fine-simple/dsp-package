@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DSPAlgorithms.DataStructures;
 using System.Numerics;
+using static DSPAlgorithms.Algorithms.AlgorithmsUtilities;
 
 namespace DSPAlgorithms.Algorithms
 {
@@ -18,7 +19,7 @@ namespace DSPAlgorithms.Algorithms
         {
             OutputFreqDomainSignal = new Signal(false, new List<float>(), new List<float>(), new List<float>());
             
-            List<Complex> freqDomain =  timeToFrequencyDomain(InputTimeDomainSignal.Samples);
+            List<Complex> freqDomain = timeToFrequencyDomain(InputTimeDomainSignal.Samples);
             
             for (int i = 0; i < freqDomain.Count; i++)
             {
@@ -26,24 +27,6 @@ namespace DSPAlgorithms.Algorithms
                 OutputFreqDomainSignal.FrequenciesAmplitudes.Add(Convert.ToSingle(freqDomain[i].Magnitude));
                 OutputFreqDomainSignal.FrequenciesPhaseShifts.Add(Convert.ToSingle(freqDomain[i].Phase));
             }
-        }
-        
-        private List<Complex> timeToFrequencyDomain(List<float> freqSamples)
-        {
-            List<Complex> timeSamples = new List<Complex>();
-            int N = freqSamples.Count;
-
-            for (int k = 0; k < N; k++)
-            {
-                Complex sum = Complex.Zero;
-                for (int n = 0; n < N; n++)
-                {
-                    double exp = -k * 2 * Math.PI * n / N;
-                    sum += new Complex(Math.Cos(exp), Math.Sin(exp)) * freqSamples[n];
-                }
-                timeSamples.Add(sum);
-            }
-            return timeSamples;
         }
     }
 }

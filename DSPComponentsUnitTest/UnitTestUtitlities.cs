@@ -25,7 +25,7 @@ namespace DSPComponentsUnitTest
                 SigSamples.Add(sample);
                 SigIndices.Add(c++);
             }
-
+         
             sr.Close();
 
             streamSaver.WriteLine(0);
@@ -104,7 +104,7 @@ namespace DSPComponentsUnitTest
             {
                 if ((!float.IsNaN(l1[i]) && float.IsNaN(l2[i])) || (float.IsNaN(l1[i]) && !float.IsNaN(l2[i])))
                     return false;
-                else if (Math.Abs(l1[i] - l2[i]) > 0.0001)
+                else if (Math.Abs(l1[i] - l2[i]) > 0.01)
                     return false;
             }
 
@@ -114,7 +114,7 @@ namespace DSPComponentsUnitTest
         {
             if (l1.Samples.Count != l2.Samples.Count)
                 return false;
-
+            
             if (l1.SamplesIndices.Count != l2.SamplesIndices.Count)
                 return false;
 
@@ -123,7 +123,7 @@ namespace DSPComponentsUnitTest
                 if ((!float.IsNaN(l1.Samples[i]) && float.IsNaN(l2.Samples[i]))
                     || (float.IsNaN(l1.Samples[i]) && !float.IsNaN(l2.Samples[i])))
                     return false;
-                else if (Math.Abs(l1.Samples[i] - l2.Samples[i]) > 0.0001)
+                else if (Math.Abs(l1.Samples[i] - l2.Samples[i]) > 0.001)
                     return false;
                 else if (l1.SamplesIndices[i] != l2.SamplesIndices[i])
                     return false;
@@ -154,10 +154,10 @@ namespace DSPComponentsUnitTest
         {
             while (p < 0)
             {
-                p += 2 * Math.PI;
+                p += 2*Math.PI;
             }
 
-            return (float)(p % (2 * Math.PI));
+            return (float) (p % (2* Math.PI));
         }
         public static List<float> LoadSamples(string filePath)
         {
@@ -174,7 +174,7 @@ namespace DSPComponentsUnitTest
             }
 
             stream.Close();
-            return SigSamples;
+            return  SigSamples;
         }
 
         public static void SaveSignalTimeDomain(Signal sig, string filePath)

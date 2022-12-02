@@ -21,5 +21,43 @@ namespace DSPAlgorithms.Algorithms
             }
             return result;
         }
+
+        public static List<Complex> timeToFrequencyDomain(List<float> freqSamples)
+        {
+            List<Complex> timeSamples = new List<Complex>();
+            int N = freqSamples.Count;
+
+            for (int k = 0; k < N; k++)
+            {
+                Complex sum = Complex.Zero;
+                for (int n = 0; n < N; n++)
+                {
+                    double exp = -k * 2 * Math.PI * n / N;
+                    sum += new Complex(Math.Cos(exp), Math.Sin(exp)) * freqSamples[n];
+                }
+                timeSamples.Add(sum);
+            }
+            return timeSamples;
+        }
+
+        public static List<float> frequencyToTimeDomain(List<Complex> freqSamples)
+        {
+            List<float> timeSamples = new List<float>();
+
+            int N = freqSamples.Count;
+
+            for (int k = 0; k < N; k++)
+            {
+                Complex sum = Complex.Zero;
+                for (int n = 0; n < N; n++)
+                {
+                    double exp = k * 2 * Math.PI * n / N;
+                    sum += new Complex(Math.Cos(exp), Math.Sin(exp)) * freqSamples[n];
+                }
+                timeSamples.Add(1.0f / N * Convert.ToSingle(sum.Real));
+            }
+
+            return timeSamples;
+        }
     }
 }
