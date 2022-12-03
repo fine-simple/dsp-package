@@ -10,16 +10,16 @@ namespace DSPAlgorithms.Algorithms
         public override void Run()
         {
             List<float> dct = new List<float>();
-            double N = InputSignal.Samples.Count;
-            for (double k = 0; k < N; k++)
+            int N = InputSignal.Samples.Count;
+            for (int k = 0; k < N; k++)
             {
-                double sum = 0;
-                for (double n = 0; n < N; n++)
+                float sum = 0;
+                for (int n = 0; n < N; n++)
                 {
-                    sum += InputSignal.Samples[(int)n] * Math.Cos(Math.PI * (2 * n - 1) * (2 * k - 1) / N / 4);
+                    sum += InputSignal.Samples[n] * (float)Math.Cos(Math.PI * (2 * n - 1) * (2 * k - 1) / N / 4);
                 }
-                sum *= Math.Sqrt(2 / N);
-                dct.Add((float)sum);
+                sum *= (float)Math.Sqrt(2f / N);
+                dct.Add(sum);
             }
             OutputSignal = new Signal(dct, false);
         }
