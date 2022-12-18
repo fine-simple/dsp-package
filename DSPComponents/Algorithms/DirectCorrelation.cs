@@ -16,38 +16,91 @@ namespace DSPAlgorithms.Algorithms
 
         public override void Run()
         {
-            if(InputSignal2 == null)
-                InputSignal2 = new Signal(InputSignal1.Samples.ToList(), InputSignal1.SamplesIndices.ToList(), InputSignal1.Periodic);
-            
-            OutputNonNormalizedCorrelation = new List<float>();
-            OutputNormalizedCorrelation = new List<float>();
-
-            float dominator = getNormalizingDominator(InputSignal1.Samples, InputSignal2.Samples);
-            
+            float sum1 = 0,
+                sum2 = 0,
+                normalize;
             for (int i = 0; i < InputSignal1.Samples.Count; i++)
+                sum1 += (float)Math.Pow(InputSignal1.Samples[i], 2);
+
+            if (InputSignal2 != null)
             {
-                float r = getR(InputSignal1.Samples, InputSignal2.Samples);
-                OutputNonNormalizedCorrelation.Add(r);
-                OutputNormalizedCorrelation.Add(r / dominator);
-                shiftRight(InputSignal2);
+                for (int i = 0; i < InputSignal2.Samples.Count; i++)
+                    sum2 += (float)Math.Pow(InputSignal2.Samples[i], 2);
+
+                if (InputSignal1.Samples.Count == InputSignal2.Samples.Count)
+                    normalize = (float)Math.Sqrt(sum1 * sum2) / InputSignal1.Samples.Count;
+                else
+                    normalize =
+                        (float)Math.Sqrt(sum1 * sum2)
+                        / (InputSignal1.Samples.Count + InputSignal2.Samples.Count - 1);
             }
+            else
+                normalize = sum1 / InputSignal1.Samples.Count;
+
+            List<float> outputNonNormalized = new List<float>();
+            List<float> outputNormalized = new List<float>();
+
+            if (InputSignal2 == null)
+            {
+                int N = InputSignal1.Samples.Count;
+                for (int j = 0; j < N; j++)
+                {
+                    double sum = 0;
+                    if (!InputSignal1.Periodic)
+                        for (int n = 0; n + j < N; n++)
+                            sum += InputSignal1.Samples[n] * InputSignal1.Samples[n + j];
+                    else
+                        for (int n = 0; n < N; n++)
+                            sum += InputSignal1.Samples[n] * InputSignal1.Samples[(n + j) % N];
+
+                    outputNonNormalized.Add((float)sum / N);
+                    outputNormalized.Add(outputNonNormalized[j] / normalize);
+                }
+            }
+            else
+            {
+                int N = InputSignal2.Samples.Count + InputSignal1.Samples.Count - 1;
+                normalize *= InputSignal2.Samples.Count;
+                for (int j = 0; j < N; j++)
+                {
+                    double sum = 0;
+                    if (!InputSignal1.Periodic && !InputSignal2.Periodic)
+                        for (int n = 0; n + j < N; n++)
+                            sum += InputSignal1.Samples[n] * InputSignal2.Samples[n + j];
+                    else if (InputSignal1.Periodic && !InputSignal2.Periodic)
+                        for (int n = 0; n < N; n++)
+                            sum += InputSignal1.Samples[n] * InputSignal2.Samples[(n + j) % N];
+                    else if (!InputSignal1.Periodic && InputSignal2.Periodic)
+                        for (int n = 0; n + j < N; n++)
+                            sum += InputSignal1.Samples[n] * InputSignal2.Samples[(n + j) % N];
+                    else
+                        for (int n = 0; n < N; n++)
+                            sum += InputSignal1.Samples[n] * InputSignal2.Samples[(n + j) % N];
+
+                    outputNonNormalized.Add((float)sum / N);
+                    outputNormalized.Add(outputNonNormalized[j] / normalize);
+                }
+            }
+            OutputNonNormalizedCorrelation = outputNonNormalized;
+            OutputNormalizedCorrelation = outputNormalized;
         }
 
         private void shiftRight(Signal signal)
-		{
+        {
             float[] newSamples = new float[signal.Samples.Count];
 
-			if(signal.Periodic)
+            if (signal.Periodic)
                 newSamples[newSamples.Length - 1] = signal.Samples[0];
-            else 
+            else
                 newSamples[newSamples.Length - 1] = 0;
 
             for (int i = 0; i < newSamples.Length - 1; i++)
-                newSamples[i] = signal.Samples[i+1];
+                newSamples[i] = signal.Samples[i + 1];
 
             signal.Samples = newSamples.ToList();
-		}
-		private float getNormalizingDominator(List<float> signal1, List<float> signal2)
+        }
+
+        private float getNormalizingDominator(List<float> signal1, List<float> signal2)
         {
             float sum1 = getSquaredSum(signal1);
             float sum2 = getSquaredSum(signal2);
@@ -72,9 +125,9 @@ namespace DSPAlgorithms.Algorithms
             {
                 sum += signal1[i] * signal2[i];
             }
-            
+
             float corr = sum / signal1.Count;
-            
+
             return corr;
         }
     }
