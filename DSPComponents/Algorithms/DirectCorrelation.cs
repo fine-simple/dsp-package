@@ -16,73 +16,25 @@ namespace DSPAlgorithms.Algorithms
 
         public override void Run()
         {
-            float sum1 = 0,
-                sum2 = 0,
-                normalize;
-            for (int i = 0; i < InputSignal1.Samples.Count; i++)
-                sum1 += (float)Math.Pow(InputSignal1.Samples[i], 2);
-
-            if (InputSignal2 != null)
-            {
-                for (int i = 0; i < InputSignal2.Samples.Count; i++)
-                    sum2 += (float)Math.Pow(InputSignal2.Samples[i], 2);
-
-                if (InputSignal1.Samples.Count == InputSignal2.Samples.Count)
-                    normalize = (float)Math.Sqrt(sum1 * sum2) / InputSignal1.Samples.Count;
-                else
-                    normalize =
-                        (float)Math.Sqrt(sum1 * sum2)
-                        / (InputSignal1.Samples.Count + InputSignal2.Samples.Count - 1);
-            }
-            else
-                normalize = sum1 / InputSignal1.Samples.Count;
-
-            List<float> outputNonNormalized = new List<float>();
-            List<float> outputNormalized = new List<float>();
-
             if (InputSignal2 == null)
-            {
-                int N = InputSignal1.Samples.Count;
-                for (int j = 0; j < N; j++)
-                {
-                    double sum = 0;
-                    if (!InputSignal1.Periodic)
-                        for (int n = 0; n + j < N; n++)
-                            sum += InputSignal1.Samples[n] * InputSignal1.Samples[n + j];
-                    else
-                        for (int n = 0; n < N; n++)
-                            sum += InputSignal1.Samples[n] * InputSignal1.Samples[(n + j) % N];
+                InputSignal2 = new Signal(
+                    InputSignal1.Samples.ToList(),
+                    InputSignal1.SamplesIndices.ToList(),
+                    InputSignal1.Periodic
+                );
 
-                    outputNonNormalized.Add((float)sum / N);
-                    outputNormalized.Add(outputNonNormalized[j] / normalize);
-                }
-            }
-            else
-            {
-                int N = InputSignal2.Samples.Count + InputSignal1.Samples.Count - 1;
-                normalize *= InputSignal2.Samples.Count;
-                for (int j = 0; j < N; j++)
-                {
-                    double sum = 0;
-                    if (!InputSignal1.Periodic && !InputSignal2.Periodic)
-                        for (int n = 0; n + j < N; n++)
-                            sum += InputSignal1.Samples[n] * InputSignal2.Samples[n + j];
-                    else if (InputSignal1.Periodic && !InputSignal2.Periodic)
-                        for (int n = 0; n < N; n++)
-                            sum += InputSignal1.Samples[n] * InputSignal2.Samples[(n + j) % N];
-                    else if (!InputSignal1.Periodic && InputSignal2.Periodic)
-                        for (int n = 0; n + j < N; n++)
-                            sum += InputSignal1.Samples[n] * InputSignal2.Samples[(n + j) % N];
-                    else
-                        for (int n = 0; n < N; n++)
-                            sum += InputSignal1.Samples[n] * InputSignal2.Samples[(n + j) % N];
+            OutputNonNormalizedCorrelation = new List<float>();
+            OutputNormalizedCorrelation = new List<float>();
 
-                    outputNonNormalized.Add((float)sum / N);
-                    outputNormalized.Add(outputNonNormalized[j] / normalize);
-                }
+            float dominator = getNormalizingDominator(InputSignal1.Samples, InputSignal2.Samples);
+
+            for (int i = 0; i < InputSignal1.Samples.Count; i++)
+            {
+                float r = getR(InputSignal1.Samples, InputSignal2.Samples);
+                OutputNonNormalizedCorrelation.Add(r);
+                OutputNormalizedCorrelation.Add(r / dominator);
+                shiftRight(InputSignal2);
             }
-            OutputNonNormalizedCorrelation = outputNonNormalized;
-            OutputNormalizedCorrelation = outputNormalized;
         }
 
         private void shiftRight(Signal signal)
