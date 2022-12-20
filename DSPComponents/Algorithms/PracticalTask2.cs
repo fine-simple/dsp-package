@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+
 namespace DSPAlgorithms.Algorithms
 {
     public class PracticalTask2 : Algorithm
@@ -22,12 +23,61 @@ namespace DSPAlgorithms.Algorithms
         {
             Signal InputSignal = LoadSignal(SignalPath);
 
-            throw new NotImplementedException();
+            var fir = new FIR();
+            fir.InputTimeDomainSignal = InputSignal;
+            fir.InputStopBandAttenuation = 50; // From README
+            fir.InputTransitionBand = 500; // From README
+            fir.InputFilterType = FILTER_TYPES.BAND_PASS;
+            fir.InputF1 = miniF;
+            fir.InputF2 = maxF;
+            fir.InputFS = Fs;
+            fir.Run();
+            Signal output = fir.OutputYn;
+            // TODO: Save output to File
+
+            if (newFs >= maxF * 2)
+            {
+                var sampling = new Sampling();
+                sampling.InputSignal = output;
+                sampling.L = L;
+                sampling.M = M;
+                sampling.Run();
+                output = sampling.OutputSignal;
+                // TODO: Save output to File
+            }
+
+            var dc = new DC_Component();
+            dc.InputSignal = output;
+            dc.Run();
+            output = dc.OutputSignal;
+            // TODO: Save output to File
+
+            var normalizer = new Normalizer();
+            normalizer.InputSignal = output;
+            normalizer.InputMinRange = -1;
+            normalizer.InputMaxRange = 1;
+            normalizer.Run();
+            output = normalizer.OutputNormalizedSignal;
+            // TODO: Save output to File
+            
+            var dft = new DiscreteFourierTransform();
+            dft.InputTimeDomainSignal = output;
+            dft.InputSamplingFrequency = Fs;
+            dft.Run();
+            output = dft.OutputFreqDomainSignal;
+            // TODO: Save output to File
+            
+            OutputFreqDomainSignal = output;
         }
 
         public Signal LoadSignal(string filePath)
         {
-            Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            Stream stream = File.Open(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.ReadWrite
+            );
             var sr = new StreamReader(stream);
 
             var sigType = byte.Parse(sr.ReadLine());
@@ -77,7 +127,14 @@ namespace DSPAlgorithms.Algorithms
             }
 
             stream.Close();
-            return new Signal(SigSamples, SigIndices, isPeriodic == 1, SigFreq, SigFreqAmp, SigPhaseShift);
+            return new Signal(
+                SigSamples,
+                SigIndices,
+                isPeriodic == 1,
+                SigFreq,
+                SigFreqAmp,
+                SigPhaseShift
+            );
         }
     }
 }

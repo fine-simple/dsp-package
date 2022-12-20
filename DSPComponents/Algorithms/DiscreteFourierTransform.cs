@@ -20,10 +20,10 @@ namespace DSPAlgorithms.Algorithms
             OutputFreqDomainSignal = new Signal(false, new List<float>(), new List<float>(), new List<float>());
             
             List<Complex> freqDomain = timeToFrequencyDomain(InputTimeDomainSignal.Samples);
-            
+            float phi = (float)(2 * Math.PI * InputSamplingFrequency / freqDomain.Count);
             for (int i = 0; i < freqDomain.Count; i++)
             {
-                OutputFreqDomainSignal.Frequencies.Add(i);
+                OutputFreqDomainSignal.Frequencies.Add((float)Math.Round(i * phi, 1));
                 OutputFreqDomainSignal.FrequenciesAmplitudes.Add(Convert.ToSingle(freqDomain[i].Magnitude));
                 OutputFreqDomainSignal.FrequenciesPhaseShifts.Add(Convert.ToSingle(freqDomain[i].Phase));
             }
