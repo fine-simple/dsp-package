@@ -33,7 +33,7 @@ namespace DSPAlgorithms.Algorithms
             fir.InputFS = Fs;
             fir.Run();
             Signal output = fir.OutputYn;
-            // TODO: Save output to File
+            SaveSignal(output, "1-FIR");
 
             if (newFs >= maxF * 2)
             {
@@ -43,14 +43,14 @@ namespace DSPAlgorithms.Algorithms
                 sampling.M = M;
                 sampling.Run();
                 output = sampling.OutputSignal;
-                // TODO: Save output to File
+                SaveSignal(output, "Sampled");
             }
 
             var dc = new DC_Component();
             dc.InputSignal = output;
             dc.Run();
             output = dc.OutputSignal;
-            // TODO: Save output to File
+            SaveSignal(output, "2-DC_Component");
 
             var normalizer = new Normalizer();
             normalizer.InputSignal = output;
@@ -58,16 +58,56 @@ namespace DSPAlgorithms.Algorithms
             normalizer.InputMaxRange = 1;
             normalizer.Run();
             output = normalizer.OutputNormalizedSignal;
-            // TODO: Save output to File
-            
+            SaveSignal(output, "3-Normalized");
+
             var dft = new DiscreteFourierTransform();
             dft.InputTimeDomainSignal = output;
             dft.InputSamplingFrequency = Fs;
             dft.Run();
             output = dft.OutputFreqDomainSignal;
-            // TODO: Save output to File
+            SaveSignal(output, "4-DFT", true);
             
             OutputFreqDomainSignal = output;
+        }
+
+        public void SaveSignal(Signal signal, string filename, bool freq = false)
+        {
+            const string FOLDER_NAME = "OutputSignals";
+
+            if (!Directory.Exists(FOLDER_NAME))
+            {
+                Directory.CreateDirectory(FOLDER_NAME);
+            }
+
+            using (
+                StreamWriter writer = new StreamWriter(Path.Combine(FOLDER_NAME, filename) + ".ds")
+            )
+            {
+                writer.WriteLine(freq ? 1 : 0);
+                writer.WriteLine(0);
+                if (freq)
+                {
+                    writer.WriteLine(signal.Frequencies.Count);
+                    for (int i = 0; i < signal.Frequencies.Count; i++)
+                    {
+                        writer.Write(signal.Frequencies[i]);
+                        writer.Write(" ");
+                        writer.Write(signal.FrequenciesAmplitudes[i]);
+                        writer.Write(" ");
+                        writer.WriteLine(signal.FrequenciesPhaseShifts[i]);
+                    }
+                }
+                else
+                {
+                    writer.WriteLine(signal.Samples.Count);
+                    for (int i = 0; i < signal.Samples.Count; i++)
+                    {
+                        writer.Write(signal.SamplesIndices[i]);
+                        writer.Write(" ");
+                        writer.WriteLine(signal.Samples[i]);
+                    }
+                }
+            }
         }
 
         public Signal LoadSignal(string filePath)
