@@ -44,7 +44,7 @@ namespace DSPAlgorithms.Algorithms
                 sampling.Run();
                 output = sampling.OutputSignal;
                 Fs = newFs;
-                SaveSignal(output, "Sampled");
+                SaveSignal(output, "2.1-Sampled");
             }
 
             var dc = new DC_Component();
