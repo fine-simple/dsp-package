@@ -43,6 +43,7 @@ namespace DSPAlgorithms.Algorithms
                 sampling.M = M;
                 sampling.Run();
                 output = sampling.OutputSignal;
+                Fs = newFs;
                 SaveSignal(output, "Sampled");
             }
 
