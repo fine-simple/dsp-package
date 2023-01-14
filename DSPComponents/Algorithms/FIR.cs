@@ -76,13 +76,10 @@ namespace DSPAlgorithms.Algorithms
                     x = 5.5f;
                     break;
             }
-            float N = x * (float)InputFS / InputTransitionBand;
-            if ((int)N % 2 == 0)
-                return (int)N + 1;
-            else if (Math.Floor(N) < N)
-                return (int)N + 2;
-            else
-                return (int)N;
+            int N = (int)Math.Ceiling(x * (float)InputFS / InputTransitionBand);
+            if (N % 2 == 0)
+                N++;
+            return N;
         }
 
         private void initFc()
